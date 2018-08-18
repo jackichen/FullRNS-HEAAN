@@ -611,3 +611,50 @@ void TestScheme::testSigmoidBatch(long logN, long L, long logp, long degree, lon
 
 	cout << "!!! END TEST SIGMOID BATCH !!!" << endl;
 }
+
+//----------------------------------------------------------------------------------
+//   Serialization TESTS
+//----------------------------------------------------------------------------------
+
+void TestScheme::testSerialization(long logN, long L, long logp) {
+	cout << "!!! START TEST SERIALIZATION !!!" << endl;
+    //-----------------------------------------
+    TimeUtils timeutils;
+    long k = 1;
+    Context context(logN, logp, L, k);
+    SecretKey secretKey(context);
+    Scheme scheme(secretKey, context);
+    //-----------------------------------------
+    srand(time(NULL));
+    //-----------------------------------------
+    complex<double> m = EvaluatorUtils::randomCircle();
+
+    Ciphertext cipher = scheme.encryptSingle(m, L);
+
+    timeutils.start("Write single");
+    write_ciphertext(cipher, "Single.ctxt");
+    timeutils.stop("Write single");
+
+    Ciphertext cipher_in;
+    timeutils.start("Read single");
+    read_ciphertext(cipher_in, "Single.ctxt");
+    timeutils.stop("Read single");
+
+    bool match = false;
+    if (cipher.N == cipher_in.N && cipher.l == cipher_in.l && cipher.slots == cipher_in.slots) {
+        match = true;
+        long count = cipher.N * cipher.l;
+        for (long i=0; i<count; ++i)
+            if (cipher.ax[i] != cipher_in.ax[i] || cipher.bx[i] != cipher_in.bx[i]) {
+                match = false;
+                break;
+            }
+    }
+    if (match)
+        cout << "Written Ciphertext object is same as read Ciphertext object!" << endl;
+    else
+        cout << "Written Ciphertext object is differnt with read Ciphertext object!" << endl;
+
+    cout << "!!! END TEST SERIALIZATION !!!" << endl;
+
+}

@@ -55,6 +55,10 @@ public:
 
 	static void testSigmoidBatch(long logN, long L, long logp, long degree, long logSlots);
 
+	//----------------------------------------------------------------------------------
+	//   Serialization TESTS
+	//----------------------------------------------------------------------------------
+	static void testSerialization(long logN, long L, long logp);
 };
 
 #endif /* TESTSCHEME_H_ */

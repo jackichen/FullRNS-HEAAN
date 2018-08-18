@@ -9,6 +9,8 @@
 #ifndef HEAANNTT_CIPHERTEXT_H_
 #define HEAANNTT_CIPHERTEXT_H_
 
+#include <iostream>
+#include <string>
 #include "Common.h"
 
 class Ciphertext {
@@ -35,5 +37,10 @@ public:
 	Ciphertext& operator=(const Ciphertext &o);
 	
 };
+
+std::ostream& operator<<(std::ostream&, const Ciphertext&);
+std::istream& operator>>(std::istream&, Ciphertext&);
+void write_ciphertext(const Ciphertext&, const std::string&);
+void read_ciphertext(Ciphertext&, const std::string&);
 
 #endif

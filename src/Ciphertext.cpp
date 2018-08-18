@@ -6,6 +6,7 @@
 * work.  If not, see <http://creativecommons.org/licenses/by-nc/3.0/>.
 */
 
+#include <fstream>
 #include "Ciphertext.h"
 
 Ciphertext::Ciphertext() : ax(nullptr), bx(nullptr), N(0), slots(0), l(0) {}
@@ -35,4 +36,45 @@ Ciphertext& Ciphertext::operator=(const Ciphertext& o) {
 		bx[i] = o.bx[i];
 	}
 	return *this;
+}
+
+std::ostream& operator<<(std::ostream& os, const Ciphertext& cipher)
+{
+	os << "RNS-HEAAN-Ciphertext" << std::endl;
+	os << cipher.N << ' ' << cipher.l << ' ' << cipher.slots << std::endl;
+	long count = cipher.N * cipher.l;
+	for (long i = 0; i < count; ++i)
+		os << cipher.ax[i] << ' ' << cipher.bx[i] << std::endl;
+	return os;
+}
+
+std::istream& operator>>(std::istream& is, Ciphertext& cipher)
+{
+	std::string magic;
+	is >> magic;
+	if (magic == "RNS-HEAAN-Ciphertext") {
+		is >> cipher.N >> cipher.l >> cipher.slots;
+		long count = cipher.N * cipher.l;
+		delete[] cipher.ax;
+		delete[] cipher.bx;
+		cipher.ax = new uint64_t[count];
+		cipher.bx = new uint64_t[count];
+		for (long i = 0; i < count; ++i)
+			is >> cipher.ax[i] >> cipher.bx[i];
+	}
+	return is;
+}
+
+void write_ciphertext(const Ciphertext& cipher, const std::string& path)
+{
+    std::ofstream ofs(path);
+    if (ofs.is_open())
+        ofs << cipher;
+}
+
+void read_ciphertext(Ciphertext& cipher, const std::string& path)
+{
+    std::ifstream ifs(path);
+    if (ifs.is_open())
+        ifs >> cipher;
 }

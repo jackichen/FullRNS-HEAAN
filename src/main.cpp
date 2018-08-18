@@ -39,5 +39,7 @@ int main() {
 
 //	TestScheme::testHEML("data/uis.txt", 0, 5);
 
+	TestScheme::testSerialization(14, 1, 55);
+
 	return 0;
 }
