@@ -15,5 +15,6 @@ stamp-h1
 *.swp
 *.in
 *.o
+*.d
 *.lo
 config.h.in~
