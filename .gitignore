@@ -18,3 +18,4 @@ stamp-h1
 *.d
 *.lo
 config.h.in~
+.DS_Store
