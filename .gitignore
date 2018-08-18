@@ -19,3 +19,5 @@ stamp-h1
 *.lo
 config.h.in~
 .DS_Store
+.idea
+cmake-build-debug
