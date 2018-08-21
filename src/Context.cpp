@@ -343,6 +343,85 @@ Context::Context(long logN, long logp, long L, long K, long h, double sigma) :
 
 }
 
+Context::~Context() {
+    delete[] qVec;
+    delete[] qrVec;
+    delete[] qTwok;
+    delete[] qkVec;
+    delete[] qdVec;
+    delete[] qInvVec;
+    delete[] qRoots;
+    delete[] qRootsInv;
+    for (long i = 0; i < L; ++i) {
+        delete[] qRootPows[i];
+        delete[] qRootScalePows[i];
+        delete[] qRootScalePowsOverq[i];
+        delete[] qRootScalePowsInv[i];
+        delete[] qRootPowsInv[i];
+    }
+    delete[] qRootPows;
+    delete[] qRootScalePows;
+    delete[] qRootScalePowsOverq;
+    delete[] qRootScalePowsInv;
+    delete[] qRootPowsInv;
+    delete[] NInvModq;
+    delete[] NScaleInvModq;
+
+    delete[] pVec;
+    delete[] prVec;
+    delete[] pTwok;
+    delete[] pkVec;
+    delete[] pdVec;
+    delete[] pInvVec;
+    delete[] pRoots;
+    delete[] pRootsInv;
+    for (long i = 0; i < K; ++i) {
+        delete[] pRootPows[i];
+        delete[] pRootScalePows[i];
+        delete[] pRootScalePowsOverp[i];
+        delete[] pRootScalePowsInv[i];
+        delete[] pRootPowsInv[i];
+        delete[] pHatModq[i];
+    }
+    delete[] pRootPows;
+    delete[] pRootScalePows;
+    delete[] pRootScalePowsOverp;
+    delete[] pRootScalePowsInv;
+    delete[] pRootPowsInv;
+    delete[] NInvModp;
+    delete[] NScaleInvModp;
+    delete[] pHatModq;
+
+    delete[] pHatModp;
+    delete[] pHatInvModp;
+
+    for (long l = 0; l < L; ++l) {
+        delete[] qHatInvModq[l];
+        for (long i = 0; i < l + 1; ++i)
+            delete[] qHatModp[l][i];
+        delete[] qHatModp[l];
+        delete[] QModp[l];
+        delete[] QInvModp[l];
+        delete[] qInvModq[l];
+    }
+    delete[] qHatInvModq;
+    delete[] qHatModp;
+
+    delete[] PModq;
+    delete[] PInvModq;
+    delete[] QModp;
+    delete[] QInvModp;
+    delete[] qInvModq;
+
+    delete[] rotGroup;
+    delete[] ksiPows;
+    delete[] p2coeff;
+    delete[] p2hcoeff;
+    delete[] pccoeff;
+    for (auto p : taylorCoeffsMap)
+        delete[] p.second;
+}
+
 void Context::arrayBitReverse(complex<double>* vals, const long size) {
 	for (long i = 1, j = 0; i < size; ++i) {
 		long bit = size >> 1;
@@ -516,6 +595,7 @@ void Context::decode(uint64_t* a, complex<double>* v, long slots, long l) {
 		v[j].imag(mii);
 	}
 	fftSpecial(v, slots);
+	delete[] tmp;
 }
 
 void Context::decodeSingle(uint64_t* ax, complex<double>& val, long l) {
@@ -531,6 +611,7 @@ void Context::decodeSingle(uint64_t* ax, complex<double>& val, long l) {
 
 	val.real(vr);
 	val.imag(vi);
+    delete[] tmp;
 }
 
 void Context::decodeSingle(uint64_t* ax, double val, long l) {
@@ -1269,6 +1350,7 @@ void Context::raiseAndEqual(uint64_t*& a, long l) {
 	}
 	NTTAndEqual(ra + (l << logN), 0, K);
 
+	delete[] tmp3;
 	delete[] a;
 	a = ra;
 
@@ -1304,6 +1386,7 @@ void Context::back(uint64_t* res, uint64_t* a, long l) {
 	}
 
 	delete[] tmp;
+	delete[] tmp3;
 
 	NTTAndEqual(res, l);
 }
@@ -1340,6 +1423,7 @@ void Context::backAndEqual(uint64_t*& a, long l) {
 	}
 	NTTAndEqual(ra, l);
 	delete[] a;
+	delete[] tmp3;
 	a = ra;
 }
 
@@ -1368,6 +1452,7 @@ void Context::reScaleAndEqual(uint64_t*& a, long l) {
 		}
 	}
 	delete[] a;
+	delete[] al;
 	a = ra;
 }
 
@@ -1414,6 +1499,7 @@ void Context::leftRot(uint64_t* res, uint64_t* a, long l, long rotSlots) {
 		}
 	}
 	NTTAndEqual(res, l);
+	delete[] tmp;
 }
 
 void Context::leftRotAndEqual(uint64_t* a, long l, long rotSlots) {
@@ -1445,6 +1531,7 @@ void Context::leftRotAndEqual(uint64_t* a, long l, long rotSlots) {
 //		}
 //	}
 //	NTTAndEqual(a, l);
+    delete[] tmp;
 }
 
 void Context::conjugate(uint64_t* res, uint64_t* a, long l) {

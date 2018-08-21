@@ -10,5 +10,8 @@
 
 Key::Key(uint64_t* ax, uint64_t* bx) : ax(ax), bx(bx) {}
 
-Key::~Key() {}
+Key::~Key() {
+    delete[] ax;
+    delete[] bx;
+}
 

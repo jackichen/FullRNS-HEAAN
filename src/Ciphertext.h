@@ -35,6 +35,12 @@ public:
 	// Copy constructor
 	Ciphertext(const Ciphertext& cipher);
 	Ciphertext& operator=(const Ciphertext &o);
+
+	~Ciphertext()
+    {
+	    delete[] ax;
+	    delete[] bx;
+    }
 	
 };
 

@@ -13,3 +13,7 @@ SecretKey::SecretKey(Context& context) {
 	context.sampleHWT(sx, context.L, context.K);
 	context.NTTAndEqual(sx, context.L, context.K);
 }
+
+SecretKey::~SecretKey() {
+	delete[] sx;
+}
